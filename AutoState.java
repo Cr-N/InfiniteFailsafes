@@ -1,13 +1,11 @@
-package org.firstinspires.ftc.teamcode.DECODE.AutoStateMachine;
+package org.firstinspires.ftc.teamcode.InfiniteFailsafes;
 
 import android.util.Log;
 
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class AutoState {

@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode.DECODE.AutoStateMachine.Testing;
+package org.firstinspires.ftc.teamcode.InfiniteFailsafes;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
-
-import org.firstinspires.ftc.teamcode.DECODE.AutoStateMachine.AutoState;
 
 public class StateManager {
 
