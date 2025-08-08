@@ -5,6 +5,10 @@ See the [examples folder](https://github.com/Cr-N/InfiniteFailsafes/tree/main/Ex
 
 How to use it:
 
+### Prerequisites
+
+[FtcLib](https://docs.ftclib.org/ftclib/installation) is used for Command Scheduling and handiling. But you can modify this to your liking, this is only a template of how to manage Finite State Machines in an FTC Autonomous.
+
 ## 
 Make each autonomous state a class of it's own which extends ```AutoState``` 
 
