@@ -9,7 +9,8 @@ How to use it:
 
 [FtcLib](https://docs.ftclib.org/ftclib/installation) is used for Command Scheduling and handiling. But you can modify this to your liking, this is only a template of how to manage Finite State Machines in an FTC Autonomous.
 
-## 
+## Using this in practice:
+
 Make each autonomous state a class of it's own which extends ```AutoState``` 
 
 For example :
@@ -51,6 +52,92 @@ Here are the methods you can use in a class which extends AutoState:
      */
     public AutoState getNextState(){return null;};
 
+    /**
+     * Decorate a command you pass in for state switching logic and return it
+     * Additional boolean flag for LogCat viewing
+     * @param name - The name you want to give the command in the map
+     * @param command - Command you want to be decorated with state switching logic
+     * @return the decorated command which will handle the state switching logic for m_cmds
+     */
+    public Command trackCommand(String name, Command command) {
+        return command
+                .alongWith(new InstantCommand(()->m_cmds.put(name, COMMAND_STATE.EXECUTING)))
+                .beforeStarting(() -> m_cmds.put(name, COMMAND_STATE.INITIALIZED))
+                .whenFinished(() -> m_cmds.put(name, COMMAND_STATE.FINISHED));
+    }
+
+    /**
+     * Decorate a command you pass in for state switching logic and return it
+     * Additional boolean flag for LogCat viewing
+     * @param name - The name you want to give the command in the map
+     * @param command - Command you want to be decorated with state switching logic
+     * @return the decorated command which will handle the state switching logic for m_cmds
+     */
+    public Command trackCommand(String name, Command command, boolean showInLogs) {
+        if(!showInLogs){
+            return command
+                    .alongWith(new InstantCommand(()->m_cmds.put(name, COMMAND_STATE.EXECUTING)))
+                    .beforeStarting(() -> m_cmds.put(name, COMMAND_STATE.INITIALIZED))
+                    .whenFinished(() -> m_cmds.put(name, COMMAND_STATE.FINISHED));
+        }
+        else{
+            return command
+                    .alongWith(
+                            new InstantCommand(
+                                    ()->{
+                                        m_cmds.put(name, COMMAND_STATE.EXECUTING);
+                                        Log.d("AutoState Command Tracker", "Command " + name + " is in EXECUTING State");
+                                    }
+                            )
+                    )
+                    .beforeStarting(
+                            () ->{
+                                m_cmds.put(name, COMMAND_STATE.INITIALIZED);
+                                Log.d("AutoState Command Tracker", "Command " + name + " is in INITIALIZED State");
+                            }
+                    )
+                    .whenFinished(
+                            () ->{
+                                m_cmds.put(name, COMMAND_STATE.FINISHED);
+                                Log.d("AutoState Command Tracker", "Command " + name + " is in FINISHED State");
+                            }
+                    );
+        }
+
+    }
+```
+After making your states, you can use the ```StateManager``` to run your finite state machine.
+The ```StateManager``` is a Singleton so all you have to do is:
+
+```java 
+public class TestingFSMOpMode extends OpMode {
+
+    private StateManager stateManager;
+
+    @Override
+    public void init() {
+
+        // 1. Make a StateManager object (optional)
+        stateManager = StateManager.getInstance();
+        
+        // 2. Set the current state to your starting state
+        stateManager.setCurrentState(
+            new MoveServoAroundState(hardwareMap)
+        );
+    }
+
+    @Override
+    public void loop() {
+
+        /**
+         * 3. Call the tick() method in your robot loop
+         * this will run the CommandScheduler and handle the
+         * state switching logic for you,
+         */
+        stateManager.tick();
+    }
+
+}
 ```
 
 ### Quality Of Life Features

@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.InfiniteFailsafes.StateManager;
 import java.util.Map;
 
 
-
 @TeleOp(name = "FSM Testbench", group = "DECODE")
 public class TestingFSMOpMode extends OpMode {
 
@@ -44,11 +43,9 @@ public class TestingFSMOpMode extends OpMode {
     private void displayTelemetry() {
         AutoState currentState = stateManager.getCurrentState();
 
-        // Verificare esentiala pentru a preveni NullPointerException
         if (currentState != null) {
             telemetry.addData("Current State", currentState.getClass().getSimpleName());
 
-            // Formatare sigura si curata a map-ului de comenzi
             if (currentState.m_cmds.isEmpty()) {
                 telemetry.addLine("No commands are being tracked.");
             } else {
